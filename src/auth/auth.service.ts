@@ -18,6 +18,6 @@ export class AuthService {
         if (!req.user) {
             return null
         }
-        return req.user
+        return "Authorisation successful"
         }
 }
