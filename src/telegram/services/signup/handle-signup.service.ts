@@ -92,8 +92,10 @@ export class HandleSignupService {
             },500)
             }
           else {
-            this.bot.sendMessage(chatId, "Someone has already subscribed from this email id. Use other email id.");
-            this.start()
+            this.bot.sendMessage(chatId, `Thanks for visiting again ${obj["name"]}`);
+            setTimeout(()=>{
+              this.fetchWeather(chatId)
+            },500)
           }
         } catch (error) {
           this.bot.sendMessage(chatId, "Error occurred during signup. Please try again later.");
