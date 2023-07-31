@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { TelegramService } from 'src/telegram/telegram.service';
 const TelegramBot = require('node-telegram-bot-api');
 
 // Telegram bot token
