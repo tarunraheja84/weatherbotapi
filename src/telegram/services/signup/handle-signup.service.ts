@@ -86,6 +86,7 @@ export class HandleSignupService {
           });
 
           if (response.status===201) {
+            console.log(response.status)
             this.bot.sendMessage(chatId, "Subscription Successful!");
             setTimeout(()=>{
               this.fetchWeather(chatId)
