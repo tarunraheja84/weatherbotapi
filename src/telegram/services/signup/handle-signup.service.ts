@@ -97,8 +97,8 @@ export class HandleSignupService {
             },500)
           }
         } catch (error) {
-          const err=JSON.stringify(error)
-          this.bot.sendMessage(chatId, err);
+          // const err=JSON.stringify(error)
+          this.bot.sendMessage(chatId, error);
           // this.bot.sendMessage(chatId, "Error occurred during signup. Please try again later.");
           this.start()
           console.log(error)
