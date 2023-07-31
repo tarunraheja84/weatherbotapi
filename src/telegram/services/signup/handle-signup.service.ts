@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { AdminLoginService } from '../admin-login/admin-login.service';
 import { BotService } from '../bot/bot.service';
 import { WeatherService } from '../weather/weather.service';
 
@@ -10,7 +9,7 @@ function isEmail(input: string): boolean {
 
 @Injectable()
 export class HandleSignupService {
-    constructor(private botService:BotService,private weatherService:WeatherService,private adminLoginService:AdminLoginService){}
+    constructor(private botService:BotService,private weatherService:WeatherService){}
     bot = this.botService.getBotInstance()
 
     start = () => {
@@ -32,7 +31,7 @@ export class HandleSignupService {
               this.handleSignup(chatId, msg);
             }
             else if (msg.text.trim().toLowerCase() === "admin") {
-              this.adminLoginService.Login(chatId, msg);
+              this.Login(chatId, msg);
             }
             else if(msg.text.trim().toLowerCase()==="exit"){
               this.bot.sendMessage(chatId,"You have successfully exited. Type something to continue again")
@@ -143,4 +142,35 @@ export class HandleSignupService {
         });
       };
       
+
+      handleLogin=(chatId:any,msg:any)=>{
+
+      }
+  
+      Login= async (chatId:any,msg:any)=>{
+          const message=`<a href="https://weatherbotapi.vercel.app/auth">Click here</a> to verify your google account`
+          this.bot.sendMessage(chatId, message, { parse_mode: 'HTML' });
+          
+          setTimeout(()=>{
+              this.bot.sendMessage("Waiting for the server response....")
+          },500)
+          setTimeout(async ()=>{
+              try{
+                  const response=await fetch('https://weatherbotapi.vercel.app/auth/google/callback')
+                  if(response){
+                      this.bot.sendMessage("You have successfully authorized")
+                      setTimeout(()=>{
+                          this.handleLogin(chatId,msg);
+                      },500)
+                  }
+                  else{
+                      this.bot.sendMessage("You took too much time to authorize yourself.")
+                      this.start();
+                  }
+              }catch(err){
+                  console.log(err)
+              }
+          },5000)
+         
+      }
 }
