@@ -75,7 +75,7 @@ export class HandleSignupService {
 
     signup = async (chatId, obj) => {
         try {
-          const response = await fetch('https://weatherbotapi-production.up.railway.app/user/signup', {
+          const response = await fetch('https://weatherbotapi-production.up.railway.app/user', {
             method: "POST",
             headers: {
               "Content-type": "application/json",
