@@ -76,7 +76,7 @@ export class HandleSignupService {
 
     signup = async (chatId, obj) => {
         try {
-          const response = await fetch('https://weatherbotapi.vercel.app/auth/signup', {
+          const response = await fetch('https://weatherbotapi.vercel.app/user/signup', {
             method: "POST",
             headers: {
               "Content-type": "application/json",
@@ -86,7 +86,6 @@ export class HandleSignupService {
           });
 
           if (response.status===201) {
-            console.log(response.status)
             this.bot.sendMessage(chatId, "Subscription Successful!");
             setTimeout(()=>{
               this.fetchWeather(chatId)
