@@ -79,7 +79,7 @@ let AuthService = exports.AuthService = class AuthService {
         };
         this.signup = async (chatId, obj) => {
             try {
-                const response = await fetch('https://weatherbotapi.onrender.com/user', {
+                const response = await fetch(`${process.env.URL}/user`, {
                     method: "POST",
                     headers: {
                         "Content-type": "application/json",
@@ -125,7 +125,32 @@ let AuthService = exports.AuthService = class AuthService {
                         }
                         else if (isEmail(email)) {
                             obj["email"] = email;
-                            this.signup(chatId, obj);
+                            this.bot.sendMessage(chatId, "Please enter the password set up by admin to access my services");
+                            this.bot.once('message', async (passwordMsg) => {
+                                const password = passwordMsg.text.trim();
+                                let fetchedPswrd = null;
+                                try {
+                                    const response = await fetch(`${process.env.URL}/password`);
+                                    const result = await response.json();
+                                    fetchedPswrd = result[0].password;
+                                }
+                                catch (err) {
+                                    console.log(err);
+                                }
+                                if (password.trim().toLowerCase() === "exit") {
+                                    this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
+                                    this.start();
+                                }
+                                else if (password === fetchedPswrd) {
+                                    this.signup(chatId, obj);
+                                }
+                                else {
+                                    this.bot.sendMessage(chatId, "Wrong Password. Please enter your details again");
+                                    setTimeout(() => {
+                                        this.handleSignup(chatId, msg);
+                                    }, 500);
+                                }
+                            });
                         }
                         else {
                             this.bot.sendMessage(chatId, "Invalid Email. Please enter your details again");
@@ -144,6 +169,101 @@ let AuthService = exports.AuthService = class AuthService {
             });
         };
         this.handleLogin = (chatId, msg) => {
+            this.bot.sendMessage(chatId, "Type settings to update bot settings or type users to view info of all the subscribed users.");
+            this.bot.once('message', async (adminMsg) => {
+                if (adminMsg.text.trim().toLowerCase() === "exit") {
+                    this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
+                    this.start();
+                }
+                else if (adminMsg.text.trim().toLowerCase() === "users") {
+                    const response = await fetch(`${process.env.URL}/user`);
+                    const users = await response.json();
+                    this.bot.sendMessage(chatId, `${users.length} users are there in subscriptions list at this time. Their details is as follows-`);
+                    let str = "";
+                    for (let i = 0; i < users.length; i++) {
+                        str += `${i + 1}. name: ${users[i].name}\n\t\t\t\temail: ${users[i].email}\n`;
+                    }
+                    setTimeout(() => {
+                        this.bot.sendMessage(chatId, str);
+                    }, 500);
+                    setTimeout(() => {
+                        this.handleUserOperations(chatId, msg);
+                    }, 500);
+                }
+                else if (adminMsg.text.trim().toLowerCase() === "settings") {
+                    this.bot.sendMessage(chatId, "Type the new password for anyone who would like to access me");
+                    this.bot.once('message', (pswrdMsg) => {
+                        this.bot.sendMessage(chatId, "Confirm new password");
+                        this.bot.once('message', async (confirmPswrdMsg) => {
+                            if (pswrdMsg.text.trim().toLowerCase() === "exit") {
+                                this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
+                                this.start();
+                            }
+                            else if (pswrdMsg.text === confirmPswrdMsg.text) {
+                                try {
+                                    await fetch(`${process.env.URL}/password`, {
+                                        method: 'DELETE'
+                                    });
+                                    const response = await fetch(`${process.env.URL}/password`, {
+                                        method: 'POST',
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                            "Accept": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            password: pswrdMsg.text
+                                        })
+                                    });
+                                    if (response.ok) {
+                                        this.bot.sendMessage(chatId, "Password updated successfully");
+                                        setTimeout(() => {
+                                            this.handleLogin(chatId, msg);
+                                        }, 500);
+                                    }
+                                    else {
+                                        this.bot.sendMessage(chatId, "Some error occured");
+                                    }
+                                }
+                                catch (err) {
+                                    console.log(err);
+                                }
+                            }
+                            else {
+                                this.bot.sendMessage(chatId, "Passwords did not match");
+                                this.handleLogin(chatId, msg);
+                            }
+                        });
+                    });
+                }
+                else {
+                    this.bot.sendMessage(chatId, "Sorry, I did not understand");
+                    this.handleLogin(chatId, msg);
+                }
+            });
+        };
+        this.handleUserOperations = (chatId, msg) => {
+            this.bot.sendMessage(chatId, "Enter Remove and user email id to remove that particular user else type exit.");
+            this.bot.once('message', async (blockMessage) => {
+                if (blockMessage.text.trim().toLowerCase() === "exit") {
+                    this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
+                    this.start();
+                }
+                else if (blockMessage.text.split(' ').length === 2 && blockMessage.text.split(' ')[0].trim().toLowerCase() === "remove") {
+                    const response = await fetch(`${process.env.URL}/user?email=${blockMessage.text.split(' ')[1]}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        this.bot.sendMessage(chatId, "This user will now have to subscribe again to access my services.");
+                        this.handleLogin(chatId, msg);
+                    }
+                }
+                else {
+                    this.bot.sendMessage(chatId, "Sorry, I did not understand");
+                    setTimeout(() => {
+                        this.handleLogin(chatId, msg);
+                    }, 500);
+                }
+            });
         };
         this.Login = async (chatId, msg) => {
             const message = `<a href="https://weatherbotapi.onrender.com/auth">Click here</a> to verify your google account`;
@@ -153,7 +273,7 @@ let AuthService = exports.AuthService = class AuthService {
             }, 500);
             setTimeout(async () => {
                 try {
-                    const response = await fetch('https://weatherbotapi.onrender.com/auth/google/callback', {
+                    const response = await fetch(`${process.env.URL}/auth/google/callback`, {
                         method: 'POST',
                         headers: {
                             "Content-type": "application/json",

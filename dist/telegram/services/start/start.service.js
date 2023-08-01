@@ -31,7 +31,7 @@ let StartService = exports.StartService = class StartService {
                         this.authService.handleSignup(chatId, msg);
                     }
                     else if (msg.text.trim().toLowerCase() === "admin") {
-                        this.authService.handleLogin(chatId, msg);
+                        this.authService.Login(chatId, msg);
                     }
                     else if (msg.text.trim().toLowerCase() === "exit") {
                         this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");

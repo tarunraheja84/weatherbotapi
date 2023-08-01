@@ -10,5 +10,6 @@ export declare class AuthService {
     signup: (chatId: any, obj: any) => Promise<void>;
     handleSignup: (chatId: any, msg: any) => void;
     handleLogin: (chatId: any, msg: any) => void;
+    handleUserOperations: (chatId: any, msg: any) => void;
     Login: (chatId: any, msg: any) => Promise<void>;
 }
