@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StartService = void 0;
 const common_1 = require("@nestjs/common");
 const bot_service_1 = require("../bot/bot.service");
-const handle_signup_service_1 = require("../signup/handle-signup.service");
+const auth_service_1 = require("../auth/auth.service");
 let StartService = exports.StartService = class StartService {
-    constructor(botService, handleSignupService) {
+    constructor(botService, authService) {
         this.botService = botService;
-        this.handleSignupService = handleSignupService;
+        this.authService = authService;
         this.bot = this.botService.getBotInstance();
         this.start = () => {
             this.bot.once('message', (msg) => {
@@ -28,10 +28,10 @@ let StartService = exports.StartService = class StartService {
                 this.bot.once('message', (msg) => {
                     const chatId = msg.chat.id;
                     if (msg.text.trim().toLowerCase() === "user") {
-                        this.handleSignupService.handleSignup(chatId, msg);
+                        this.authService.handleSignup(chatId, msg);
                     }
                     else if (msg.text.trim().toLowerCase() === "admin") {
-                        this.handleSignupService.Login(chatId, msg);
+                        this.authService.handleLogin(chatId, msg);
                     }
                     else if (msg.text.trim().toLowerCase() === "exit") {
                         this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
@@ -48,6 +48,6 @@ let StartService = exports.StartService = class StartService {
 };
 exports.StartService = StartService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [bot_service_1.BotService, handle_signup_service_1.HandleSignupService])
+    __metadata("design:paramtypes", [bot_service_1.BotService, auth_service_1.AuthService])
 ], StartService);
 //# sourceMappingURL=start.service.js.map

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BotService } from '../bot/bot.service';
 import { WeatherService } from '../weather/weather.service';
-import axios from 'axios';
 
 function isEmail(input: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -9,7 +8,7 @@ function isEmail(input: string): boolean {
 }  
 
 @Injectable()
-export class HandleSignupService {
+export class AuthService {
     constructor(private botService:BotService,private weatherService:WeatherService){}
     bot = this.botService.getBotInstance()
 

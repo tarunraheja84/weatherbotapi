@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HandleSignupService = void 0;
+exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const bot_service_1 = require("../bot/bot.service");
 const weather_service_1 = require("../weather/weather.service");
@@ -17,7 +17,7 @@ function isEmail(input) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(input);
 }
-let HandleSignupService = exports.HandleSignupService = class HandleSignupService {
+let AuthService = exports.AuthService = class AuthService {
     constructor(botService, weatherService) {
         this.botService = botService;
         this.weatherService = weatherService;
@@ -179,8 +179,8 @@ let HandleSignupService = exports.HandleSignupService = class HandleSignupServic
         };
     }
 };
-exports.HandleSignupService = HandleSignupService = __decorate([
+exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [bot_service_1.BotService, weather_service_1.WeatherService])
-], HandleSignupService);
-//# sourceMappingURL=handle-signup.service.js.map
+], AuthService);
+//# sourceMappingURL=auth.service.js.map

@@ -8,7 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramModule = void 0;
 const common_1 = require("@nestjs/common");
-const handle_signup_service_1 = require("./services/signup/handle-signup.service");
+const auth_service_1 = require("./services/auth/auth.service");
 const telegram_service_1 = require("./telegram.service");
 const bot_service_1 = require("./services/bot/bot.service");
 const weather_service_1 = require("./services/weather/weather.service");
@@ -18,7 +18,7 @@ let TelegramModule = exports.TelegramModule = class TelegramModule {
 };
 exports.TelegramModule = TelegramModule = __decorate([
     (0, common_1.Module)({
-        providers: [telegram_service_1.TelegramService, handle_signup_service_1.HandleSignupService, bot_service_1.BotService, weather_service_1.WeatherService, start_service_1.StartService],
+        providers: [telegram_service_1.TelegramService, auth_service_1.AuthService, bot_service_1.BotService, weather_service_1.WeatherService, start_service_1.StartService],
         exports: [telegram_service_1.TelegramService],
         controllers: [telegram_controller_1.TelegramController],
     })

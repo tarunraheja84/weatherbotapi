@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { BotService } from '../bot/bot.service';
-import { HandleSignupService } from '../signup/handle-signup.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class StartService {
-    constructor(private botService:BotService,private handleSignupService:HandleSignupService){}
+    constructor(private botService:BotService,private authService:AuthService){}
     bot = this.botService.getBotInstance()
 
     start = () => {
@@ -23,10 +23,10 @@ export class StartService {
             this.bot.once('message', (msg: any) => {
               const chatId = msg.chat.id;
               if (msg.text.trim().toLowerCase() === "user") {
-                this.handleSignupService.handleSignup(chatId, msg);
+                this.authService.handleSignup(chatId, msg);
               }
               else if (msg.text.trim().toLowerCase() === "admin") {
-                this.handleSignupService.Login(chatId, msg);
+                this.authService.Login(chatId, msg);
               }
               else if(msg.text.trim().toLowerCase()==="exit"){
                 this.bot.sendMessage(chatId,"You have successfully exited. Type something to continue again")

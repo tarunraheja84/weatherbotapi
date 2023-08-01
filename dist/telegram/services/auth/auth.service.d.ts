@@ -1,6 +1,6 @@
 import { BotService } from '../bot/bot.service';
 import { WeatherService } from '../weather/weather.service';
-export declare class HandleSignupService {
+export declare class AuthService {
     private botService;
     private weatherService;
     constructor(botService: BotService, weatherService: WeatherService);
