@@ -48,7 +48,7 @@ export class AuthService {
 
     fetchWeather=async (chatId:any) => {
       try{
-        this.bot.sendMessage(chatId, "Enter the name of the city weather of which you want to know.");
+        this.bot.sendMessage(chatId, "Enter the name of the city weather of which you want to know else type exit.");
         this.bot.once('message',async (msg:any)=>{
           if(msg.text.trim().toLowerCase()==="exit"){
             this.bot.sendMessage(chatId,"You have successfully exited. Type something to continue again")
