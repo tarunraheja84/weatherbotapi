@@ -144,7 +144,10 @@ export class AuthService {
       
 
       handleLogin=(chatId:any,msg:any)=>{
-
+          this.bot.sendMessage(chatId,"Type settings to update bot settings or type users to view info of all the subscribed users.")
+          this.bot.once('message',(adminMsg:any)=>{
+            
+          })
       }
   
       Login= async (chatId:any,msg:any)=>{
