@@ -79,7 +79,7 @@ let HandleSignupService = exports.HandleSignupService = class HandleSignupServic
         };
         this.signup = async (chatId, obj) => {
             try {
-                const response = await fetch('https://weatherbotapi.vercel.app/user', {
+                const response = await fetch('https://weatherbotapi.onrender.com/user', {
                     method: "POST",
                     headers: {
                         "Content-type": "application/json",
@@ -146,14 +146,14 @@ let HandleSignupService = exports.HandleSignupService = class HandleSignupServic
         this.handleLogin = (chatId, msg) => {
         };
         this.Login = async (chatId, msg) => {
-            const message = `<a href="http://localhost:3000/auth">Click here</a> to verify your google account`;
+            const message = `<a href="https://weatherbotapi.onrender.com/auth">Click here</a> to verify your google account`;
             this.bot.sendMessage(chatId, message, { parse_mode: 'HTML' });
             setTimeout(() => {
                 this.bot.sendMessage(chatId, "Waiting for the server response....");
             }, 500);
             setTimeout(async () => {
                 try {
-                    const response = await fetch('http://localhost:3000/auth/google/callback', {
+                    const response = await fetch('https://weatherbotapi.onrender.com/auth/google/callback', {
                         method: 'POST',
                         headers: {
                             "Content-type": "application/json",
