@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BotService } from '../bot/bot.service';
 import { WeatherService } from '../weather/weather.service';
+import axios from 'axios';
 
 function isEmail(input: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -148,29 +149,38 @@ export class HandleSignupService {
       }
   
       Login= async (chatId:any,msg:any)=>{
-          const message=`<a href="https://weatherbotapi.vercel.app/auth">Click here</a> to verify your google account`
+          const message=`<a href="http://localhost:3000/auth">Click here</a> to verify your google account`
           this.bot.sendMessage(chatId, message, { parse_mode: 'HTML' });
           
           setTimeout(()=>{
-              this.bot.sendMessage("Waiting for the server response....")
+            this.bot.sendMessage(chatId, "Waiting for the server response....")
           },500)
+
           setTimeout(async ()=>{
-              try{
-                  const response=await fetch('https://weatherbotapi.vercel.app/auth/google/callback')
-                  if(response){
-                      this.bot.sendMessage("You have successfully authorized")
+            try{
+                  const response=await fetch('http://localhost:3000/auth/google/callback',{
+                    method:'POST',
+                    headers:{
+                      "Content-type":"application/json",
+                      "Accept":'application/json'
+                    }
+                  })
+                  const result=await response.json()
+                  
+                  if(result.email){
+                      this.bot.sendMessage(chatId,`Welcome ${result.firstName}, You have successfully authorized`)
                       setTimeout(()=>{
                           this.handleLogin(chatId,msg);
                       },500)
                   }
                   else{
-                      this.bot.sendMessage("You took too much time to authorize yourself.")
+                      this.bot.sendMessage(chatId,"You took too much time to authorize yourself.")
                       this.start();
                   }
               }catch(err){
                   console.log(err)
               }
-          },5000)
+          },15000)
          
       }
 }

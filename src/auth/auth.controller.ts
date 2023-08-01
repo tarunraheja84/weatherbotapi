@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
     constructor(private authService:AuthService){}
+    user=null;
 
     @Post('/signup')
     public async signup(@Req() req:any,@Res() res:any){
@@ -19,11 +20,18 @@ export class AuthController {
 
     @Get()
     @UseGuards(AuthGuard('google'))
-    async googleAuth(@Req() req) {}
+    googleAuth(@Req() req) {}
   
     @Get('/google/callback')
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Req() req) {
-      return this.authService.googleLogin(req)
+    googleAuthRedirect(@Req() req,) {
+        this.user=this.authService.googleLogin(req).user
+        return this.authService.googleLogin(req).message;
     }
+
+    @Post('/google/callback')
+    getAdmin(@Res() res) {
+        res.send(this.user)
+    }
+
 }

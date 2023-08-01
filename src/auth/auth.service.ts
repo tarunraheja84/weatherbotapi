@@ -18,6 +18,7 @@ export class AuthService {
         if (!req.user) {
             return null
         }
-        return "Authorisation successful"
+        return {user:req.user,message:"Authorisation Succesful"};
         }
+
 }
