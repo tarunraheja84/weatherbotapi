@@ -52,6 +52,7 @@ let AuthService = exports.AuthService = class AuthService {
             try {
                 this.bot.sendMessage(chatId, "Enter the name of the city weather of which you want to know else type exit.");
                 this.bot.once('message', async (msg) => {
+                    const chatId = msg.chat.id;
                     if (msg.text.trim().toLowerCase() === "exit") {
                         this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                         this.start();
@@ -110,6 +111,7 @@ let AuthService = exports.AuthService = class AuthService {
             this.bot.sendMessage(chatId, "May I know your name please?");
             this.bot.once('message', (nameMsg) => {
                 const name = nameMsg.text.trim();
+                const chatId = nameMsg.chat.id;
                 if (name.trim().toLowerCase() === "exit") {
                     this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                     this.start();
@@ -119,6 +121,7 @@ let AuthService = exports.AuthService = class AuthService {
                     this.bot.sendMessage(chatId, "May I know your email please?");
                     this.bot.once('message', (emailMsg) => {
                         const email = emailMsg.text.trim();
+                        const chatId = emailMsg.chat.id;
                         if (email.trim().toLowerCase() === "exit") {
                             this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                             this.start();
@@ -128,6 +131,7 @@ let AuthService = exports.AuthService = class AuthService {
                             this.bot.sendMessage(chatId, "Please enter the password set up by admin to access my services");
                             this.bot.once('message', async (passwordMsg) => {
                                 const password = passwordMsg.text.trim();
+                                const chatId = passwordMsg.chat.id;
                                 let fetchedPswrd = null;
                                 try {
                                     const response = await fetch(`${process.env.URL}/password`);
@@ -171,6 +175,7 @@ let AuthService = exports.AuthService = class AuthService {
         this.handleLogin = (chatId, msg) => {
             this.bot.sendMessage(chatId, "Type settings to update bot settings or type users to view info of all the subscribed users.");
             this.bot.once('message', async (adminMsg) => {
+                const chatId = adminMsg.chat.id;
                 if (adminMsg.text.trim().toLowerCase() === "exit") {
                     this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                     this.start();
@@ -193,8 +198,10 @@ let AuthService = exports.AuthService = class AuthService {
                 else if (adminMsg.text.trim().toLowerCase() === "settings") {
                     this.bot.sendMessage(chatId, "Type the new password for anyone who would like to access me");
                     this.bot.once('message', (pswrdMsg) => {
+                        const chatId = pswrdMsg.chat.id;
                         this.bot.sendMessage(chatId, "Confirm new password");
                         this.bot.once('message', async (confirmPswrdMsg) => {
+                            const chatId = confirmPswrdMsg.chat.id;
                             if (pswrdMsg.text.trim().toLowerCase() === "exit") {
                                 this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                                 this.start();
@@ -244,6 +251,7 @@ let AuthService = exports.AuthService = class AuthService {
         this.handleUserOperations = (chatId, msg) => {
             this.bot.sendMessage(chatId, "Enter Remove and user email id to remove that particular user else type exit.");
             this.bot.once('message', async (blockMessage) => {
+                const chatId = blockMessage.chat.id;
                 if (blockMessage.text.trim().toLowerCase() === "exit") {
                     this.bot.sendMessage(chatId, "You have successfully exited. Type something to continue again");
                     this.start();
